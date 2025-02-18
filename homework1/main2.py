@@ -1,14 +1,36 @@
-# vértice -> [ V3 -> V2 -> V4 ]
+# vértice -> [ (V3) -> V2 -> V4 ]
 class Adjacencia:
-    def __init__(self, destino):
-        self.vertice_destino = destino
-        self.proximo = None  # ponteiro para a próxima aresta na lista de adjacência
+    def __init__(self, vertice):
+        self.vertice = vertice
+        self.proxima_adjacencia = (
+            None  # ponteiro para a próxima aresta na lista de adjacência
+        )
 
+# Vertice V1
+# Vertice V2
+# Vertice V3
+# add_aresta(v1, v2)
+
+# Adjancencia(v2)
+# AdjacenciaV2.proxima_adjacencia = None
+
+# VerticeV1.cabeca_lista_de_adjancencias = Adjancencia(v2)
+
+# V1 -> (CABEÇA V2) 
+# V2 -> (CABEÇA V1)
+
+# add_aresta(v2, v3)
+
+# Adjancencia(v3)
+# AdjacenciaV3.proxima_adjacencia = (CABEÇA V2) AdjanceciaV1
+# v2.cabeça = AdjanceciaV3
+
+# V2 -> (CABEÇA V3) -> V1
 
 class Vertice:
     def __init__(self, data):
         self.data = data
-        self.cabeca_adjancencia = None  # ponteiro para a lista de adjacências (arestas conectadas a este vértice)
+        self.cabeca_lista_de_adjancencias = None  # ponteiro para a lista de adjacências (arestas conectadas a este vértice)
 
 
 class Grafo:
@@ -24,31 +46,33 @@ class Grafo:
         if v1 is None or v2 is None:
             return None
 
-        nova_aresta = Adjacencia(v1)
-        nova_aresta.proximo = (
-            v2.cabeca_adjancencia
+        # v1       v2
+
+        nova_aresta = Adjacencia(v1)  # ----------> v1
+        nova_aresta.proxima_adjacencia = (
+            v2.cabeca_lista_de_adjancencias
         )  # aponta para a antiga cabeça da lista de adjacência
-        v2.cabeca_adjancencia = (
+        v2.cabeca_lista_de_adjancencias = (
             nova_aresta  # atualiza a cabeça da lista de adjacência de v2
         )
 
         nova_aresta2 = Adjacencia(v2)
-        nova_aresta2.proximo = (
-            v1.cabeca_adjancencia
+        nova_aresta2.proxima_adjacencia = (
+            v1.cabeca_lista_de_adjancencias
         )  # aponta para a antiga cabeça da lista de adjacência
-        v1.cabeca_adjancencia = (
+        v1.cabeca_lista_de_adjancencias = (
             nova_aresta2  # atualiza a cabeça da lista de adjacência de v1
         )
 
     def exibir_grafo(self):
         for vertice in self.vertices:
             atual = (
-                vertice.cabeca_adjancencia
+                vertice.cabeca_lista_de_adjancencias
             )  # primeiro elemento da lista de adjacências
             linha = f"{vertice.data} -> "
             while atual:
-                linha += f"{atual.vertice_destino.data} -> "
-                atual = atual.proximo
+                linha += f"{atual.vertice.data} -> "
+                atual = atual.proxima_adjacencia
             linha += "None"
             print(linha)
 
