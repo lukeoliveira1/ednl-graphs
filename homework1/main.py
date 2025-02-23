@@ -1,50 +1,62 @@
-class Grafo:
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+class Graph:
     def __init__(self):
-        self.grafos = []
+        self.nodes = []
 
-    def adicionar_vertice(self, v):
-        if v == None:
-            return None
-        aresta = [v]
-        self.grafos.append(aresta)
+    def insert(self, value):
+        if any(node.value == value for node in self.nodes):
+            return
+        self.nodes.append(Node(value))
 
-    def adicionar_aresta(self, v1, v2):
-        if v1 is None or v2 is None:
-            return None
+    def add_edge(self, v1, v2):
+        node1 = next((node for node in self.nodes if node.value == v1), None)
+        node2 = next((node for node in self.nodes if node.value == v2), None)
 
-        for i in self.grafos:
-            # se alguma das cabeças das listas dentro do grafo[]
-            if i[0] == v1:
-                # adiciona v2 na lista de adjacentes
-                i.append(v2)
-            # se alguma das cabeças das listas dentro do grafo[]
-            if i[0] == v2:
-                # adiciona v1 na lista de adjacentes
-                i.append(v1)
+        if node1 and node2:
+            last_node = node1
+            while last_node.next:
+                last_node = last_node.next
+            last_node.next = Node(v2)
 
-    def exibir_grafo(self):
-        for i in self.grafos:
-            print(i)
+            last_node = node2
+            while last_node.next:
+                last_node = last_node.next
+            last_node.next = Node(v1)
+
+    def display_graph(self):
+        for node in self.nodes:
+            print(f"{node.value}", end="")
+            if node.next:
+                print(" --> ", end="")
+
+            current = node.next
+            while current:
+                if current.next:
+                    print(f"{current.value} --> ", end="")
+                else:
+                    print(current.value, end="")
+                current = current.next
+            print()
 
 
 if __name__ == "__main__":
-    g = Grafo()
-    g.adicionar_vertice("V1")
-    g.adicionar_vertice("V2")
-    g.adicionar_vertice("V3")
-    g.adicionar_vertice("V4")
-    g.adicionar_vertice("V5")
+    adj = Graph()
+    adj.insert(1)
+    adj.insert(2)
+    adj.insert(3)
+    adj.insert(4)
+    adj.insert(5)
 
-    g.adicionar_aresta("V1", "V2")
-    g.adicionar_aresta("V1", "V3")
-    g.adicionar_aresta("V1", "V4")
+    adj.add_edge(1, 2)
+    adj.add_edge(1, 3)
+    adj.add_edge(1, 4)
+    adj.add_edge(2, 4)
+    adj.add_edge(5, 4)
+    adj.add_edge(5, 2)
 
-    g.adicionar_aresta("V2", "V3")
-    g.adicionar_aresta("V2", "V4")
-    g.adicionar_aresta("V2", "V5")
-
-    g.adicionar_aresta("V3", "V5")
-
-    g.adicionar_aresta("V4", "V5")
-
-    g.exibir_grafo()
+    adj.display_graph()
