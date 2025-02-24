@@ -8,6 +8,10 @@ class Graph:
     def __init__(self):
         self.nodes = []
 
+    def print_heads(self):
+        for node in self.nodes:
+            print(node.value)
+
     def insert(self, value):
         if any(node.value == value for node in self.nodes):
             return
@@ -42,7 +46,6 @@ class Graph:
                     print(current.value, end="")
                 current = current.next
             print()
-
 
 if __name__ == "__main__":
     adj = Graph()
