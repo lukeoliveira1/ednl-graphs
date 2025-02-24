@@ -35,7 +35,6 @@ class Graph(GraphBase):
         current_adjacent_node = origin.next
         while current_adjacent_node:
             if not current_adjacent_node.visited:
-                print(f"Visiting {current_adjacent_node.value}")
                 self.dfs_search(current_adjacent_node, destiny, current_cost + current_adjacent_node.cost, current_track + [current_adjacent_node])
             
             current_adjacent_node = current_adjacent_node.next
