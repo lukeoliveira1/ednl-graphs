@@ -1,9 +1,8 @@
-from dfs import Graph, Node
-from read_csv import read_csv
+from dfs import Graph
 
 if __name__ == "__main__":
     adj = Graph()
-    adj.load_from_csv("bfs_and_dfs\grafo.csv")
+    adj.load_from_csv("bfs_and_dfs/dfs/grafo.csv")
     adj.display_graph()
 
     adj.dfs_search(adj.nodes[0], adj.nodes[10], 0, [adj.nodes[0]])
