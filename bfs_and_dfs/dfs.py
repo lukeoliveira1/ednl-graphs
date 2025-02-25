@@ -1,4 +1,7 @@
 from base import Graph as GraphBase
+import networkx as nx
+import matplotlib.pyplot as plt
+
 
 class Node:
     def __init__(self, value, cost=None):
@@ -14,6 +17,7 @@ class Graph(GraphBase):
         self.nodes = []
         self.max_cost = 0
         self.best_track = []
+        self.all_paths = []
         
     def insert(self, value):
         if any(node.value == value for node in self.nodes):
@@ -28,6 +32,7 @@ class Graph(GraphBase):
             return
 
         if origin == destiny:
+            self.all_paths.append(current_track.copy())
             if current_cost > self.max_cost:
                 self.max_cost = current_cost
                 self.best_track = current_track
@@ -92,3 +97,39 @@ class Graph(GraphBase):
                                 break
                             else:
                                 self.add_edge(self.nodes[len(self.nodes)-1], lines[j][1], cost=int(lines[j][2]))
+
+    def visualize_paths(self):
+        if not self.all_paths:
+            print("Nenhum caminho encontrado.")
+            return
+        
+        G = nx.DiGraph()
+        for node in self.nodes:
+            current = node.next
+            while current:
+                G.add_edge(node.value, current.value, weight=current.cost)  # Alterado para usar node.value
+                current = current.next
+        
+        pos = nx.spring_layout(G, seed=42) 
+        
+        fig, ax = plt.subplots()
+        plt.ion()
+        
+        for path in self.all_paths:
+            ax.clear()
+            
+            nx.draw(G, pos, with_labels=True, node_color='lightgray', edge_color='gray', ax=ax)
+            labels = nx.get_edge_attributes(G, 'weight')
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, ax=ax)
+            
+            path_edges = [(edge.value, next_edge.value) for edge, next_edge in zip(path, path[1:])]
+            for edge in path_edges:
+                nx.draw_networkx_edges(G, pos, edgelist=[edge], edge_color='blue', width=2, ax=ax)
+                nx.draw_networkx_nodes(G, pos, nodelist=[edge[0], edge[1]], node_color='red', ax=ax)
+                plt.pause(2)
+            
+            plt.pause(1)
+        
+        plt.ioff()
+        plt.show()
+
