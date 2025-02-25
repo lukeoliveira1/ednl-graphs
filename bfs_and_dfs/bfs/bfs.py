@@ -7,9 +7,10 @@ class Node:
         self.next = None
 
 
-class AdjacentNodesLists:
+class Graph:
     def __init__(self):
         self.nodes = []
+        self.best_track = []
 
     def print_adjacency_list(self):
         for node in self.nodes:
@@ -54,20 +55,20 @@ class AdjacentNodesLists:
 
     def bfs_min_jumps(self, start, end):
         if start == end:
-            return 0
+            return 0, [start]
 
         # CRIAR uma fila vazia
         queue = Queue()
         # CRIAR um conjunto de vértices visitados
         visited = set()
         # ADICIONAR origem na fila e marcar como visitado
-        queue.put((start, 0))
+        queue.put((start, 0, [start]))
         visited.add(start)
 
         # ENQUANTO a fila NÃO ESTIVER vazia
         while not queue.empty():
             # REMOVER vértice atual da fila
-            current_value, jumps = queue.get()
+            current_value, jumps, path = queue.get()
 
             current_node = next(
                 (node for node in self.nodes if node.value == current_value), None
@@ -81,13 +82,28 @@ class AdjacentNodesLists:
             while neighbor:
                 # SE vizinho == destino
                 if neighbor.value == end:
-                    return jumps + 1
+                    self.best_track = path + [end]
+                    return jumps + 1, self.best_track
                 # SE vizinho NÃO visitado
                 if neighbor.value not in visited:
                     # MARCAR como visitado e ADICIONAR na fila
                     visited.add(neighbor.value)
-                    queue.put((neighbor.value, jumps + 1))
+                    queue.put((neighbor.value, jumps + 1, path + [neighbor.value]))
                 neighbor = neighbor.next
 
         # RETORNAR "Nenhum caminho encontrado"
-        return "Nenhum caminho encontrado"
+        return "Nenhum caminho encontrado", []
+
+    def load_from_csv(self, file_path):
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+
+            for i in range(len(lines)):
+                lines[i] = lines[i].strip().split(",")
+
+            lines = lines[1:]
+            for i, line in enumerate(lines):
+                self.insert(line[0])
+
+            for line in lines:
+                self.add_edge(line[0], line[1])
