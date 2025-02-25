@@ -107,7 +107,7 @@ class Graph(GraphBase):
         for node in self.nodes:
             current = node.next
             while current:
-                G.add_edge(node.value, current.value, weight=current.cost)  # Alterado para usar node.value
+                G.add_edge(node.value, current.value, weight=current.cost)
                 current = current.next
         
         pos = nx.spring_layout(G, seed=42) 
