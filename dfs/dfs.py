@@ -30,6 +30,8 @@ class Graph(GraphBase):
         origin = self.get_node(origin.value)
         if not origin:
             return
+        
+        origin.visited = True
 
         if origin == destiny:
             self.all_paths.append(current_track.copy())
@@ -118,7 +120,7 @@ class Graph(GraphBase):
                 G.add_edge(node.value, current.value, weight=current.cost)
                 current = current.next
 
-        pos = nx.spring_layout(G, seed=42)
+        pos = nx.spring_layout(G, seed=64)
 
         fig, ax = plt.subplots()
         plt.ion()
@@ -150,6 +152,31 @@ class Graph(GraphBase):
                 plt.pause(2)
 
             plt.pause(1)
+
+        ax.clear()
+
+        nx.draw(
+            G,
+            pos,
+            with_labels=True,
+            node_color="lightgray",
+            edge_color="gray",
+            ax=ax,
+        )
+        labels = nx.get_edge_attributes(G, "weight")
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, ax=ax)
+
+        best_path_edges = [
+            (edge.value, next_edge.value)
+            for edge, next_edge in zip(self.best_track, self.best_track[1:])
+        ]
+        for edge in best_path_edges:
+            nx.draw_networkx_edges(
+                G, pos, edgelist=[edge], edge_color="green", width=2, ax=ax
+            )
+            nx.draw_networkx_nodes(
+                G, pos, nodelist=[edge[0], edge[1]], node_color="green", ax=ax
+            )
 
         plt.ioff()
         plt.show()
