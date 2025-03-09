@@ -62,7 +62,7 @@ class Dijkstra(GraphBase):
 
         return
 
-    def dijkstra(self, origin):
+    def dijkstra(self, origin, v2):
         #Encontra node de origem e define sua estimativa como 0
         lesser_node = None
         for node in self.nodes:
@@ -115,7 +115,8 @@ class Dijkstra(GraphBase):
                     lesser_node = node
 
         for node in self.nodes:
-            print(node.value, node.estimation_value)
+            if node.value == v2:
+                return f"A menor distância do vértice {origin} para {node.value} é {node.estimation_value}"
 
     def display_graph(self):
         for node in self.nodes:
