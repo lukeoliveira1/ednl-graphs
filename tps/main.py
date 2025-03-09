@@ -5,7 +5,7 @@ if __name__ == "__main__":
     adj.load_from_csv("tps/graph.csv")
     adj.display_graph()
 
-    adj.tps_dfs("V1")
+    adj.tps_dfs("A")
 
     print("Best track:")
     for i, node in enumerate(adj.best_track):

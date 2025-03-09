@@ -28,6 +28,10 @@ class TPS(GraphBase):
         node1 = next((node for node in self.nodes if node.value == v1), None)
         node2 = next((node for node in self.nodes if node.value == v2), None)
 
+        if not node2 and node1:
+            self.insert(v2)
+            node2 = next((node for node in self.nodes if node.value == v2), None)
+
         if node1 and node2:
             last_node = node1
             while last_node.next:
@@ -125,16 +129,10 @@ class TPS(GraphBase):
 
             lines = lines[1:]
             for i, line in enumerate(lines):
-                if self.insert(line[0]):
-                    for j in range(i, len(lines)):
-                        if lines[j][0] != line[0]:
-                            break
-                        else:
-                            self.add_edge(
-                                lines[j][0],
-                                lines[j][1],
-                                cost=int(lines[j][2]),
-                            )
+                self.insert(line[0])
+
+            for line in lines:
+                self.add_edge(line[0], line[1], int(line[2]))
 
     def visualize_tracks(self):
         if not self.all_tracks:
